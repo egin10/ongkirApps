@@ -63,9 +63,15 @@ class Detail extends Component {
                             <Text note>{item.cost[0].etd} {courier != 'pos' ? ' HARI' : null}</Text>
                         </Body>
                         <Right>
-                            <Text note>
+                            {/* <Text note>
                                 Rp.{item.cost[0].value}
-                            </Text>
+                            </Text> */}
+                            <NumberFormat 
+                                value={item.cost[0].value} 
+                                displayType={'text'} 
+                                thousandSeparator={true} 
+                                prefix={'Rp.'}
+                                renderText={value => <Text>{value}</Text>}/>
                         </Right>
                     </ListItem>
                 );
