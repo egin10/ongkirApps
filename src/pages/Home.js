@@ -33,10 +33,10 @@ class Home extends Component {
         .then(res => res.json())
         .then(resData => {
             //console.log(resData);
-            let status = resData['rajaongkir']['status']['code'];
+            let status = resData.rajaongkir.status.code;
             if(status === 200){
                 this.setState({
-                    provinces:resData['rajaongkir']['results']
+                    provinces:resData.rajaongkir.results
                 })
             }
         });
@@ -54,19 +54,13 @@ class Home extends Component {
             })
             .then(res => res.json())
             .then(resData => {
-                let status = resData['rajaongkir']['status']['code']
+                let status = resData.rajaongkir.status.code;
                 if(status === 200){
                     this.setState({
-                        originCities: resData['rajaongkir']['results']
+                        originCities: resData.rajaongkir.results
                     })
                 }
             });
-        });
-    }
-
-    _onOriginCityChange = (val) => {
-        this.setState({
-            selectedOriginCity: val
         });
     }
 
@@ -82,42 +76,28 @@ class Home extends Component {
             })
             .then(res => res.json())
             .then(resData => {
-                let status = resData['rajaongkir']['status']['code']
+                let status = resData.rajaongkir.status.code;
                 if(status === 200){
                     this.setState({
-                        destinationCities: resData['rajaongkir']['results']
+                        destinationCities: resData.rajaongkir.results
                     })
                 }
             });
         });
     }
 
-    _onDestinationCityChange = (val) => {
-        this.setState({
-            selectedDestinationCity : val
-        });
-    }
-
-    _onCourierChange = (val) => {
-        this.setState({
-            courier: val
-        })
-    }
-
-    _onWeightChange = (val) => {
-        this.setState({
-            weight: val
-        });
-    }
-
     _onNavigationToDetail = () => {
-        let params = {
-            originCity: this.state.selectedOriginCity.city_id,
-            destinationCity: this.state.selectedDestinationCity.city_id,
-            weight: this.state.weight,
-            courier: this.state.courier
+        if(this.state.selectedOriginCity == null || this.state.selectedDestinationCity == null || this.state.weight == 0 || this.state.courier == null ){
+            alert('Mohon lengkapi data!');
+        }else{
+            let params = {
+                originCity: this.state.selectedOriginCity.city_id,
+                destinationCity: this.state.selectedDestinationCity.city_id,
+                weight: this.state.weight,
+                courier: this.state.courier
+            }
+            Actions.detail({data: params});
         }
-        Actions.detail({data: params});
     }
 
     render() {
@@ -196,7 +176,8 @@ class Home extends Component {
                                         width: undefined
                                     }}
                                     selectedValue={selectedOriginCity}
-                                    onValueChange={this._onOriginCityChange}>
+                                    onValueChange={val => this.setState({selectedOriginCity: val})}
+                                    enabled={selectedOriginProvince == "" ? false : true}>
                                         <Picker.Item label="Pilih Kabupaten/Kota" value="" />
                                         {originCityItems}
                                     </Picker>
@@ -231,7 +212,8 @@ class Home extends Component {
                                             width: undefined
                                         }}
                                         selectedValue={selectedDestinationCity}
-                                        onValueChange={this._onDestinationCityChange}>
+                                        onValueChange={val => this.setState({selectedDestinationCity : val})}
+                                        enabled={selectedDestinationProvince == '' ? false : true}>
                                         <Picker.Item label="Pilih Kabupaten/Kota" value="" />
                                         {destinationCityItems}
                                     </Picker>
@@ -249,7 +231,7 @@ class Home extends Component {
                             <Body>
                                 <Item floatingLabel>
                                     <Label>Grams</Label>
-                                    <Input maxLength={6} onChangeText={this._onWeightChange}/>
+                                    <Input maxLength={6} onChangeText={val => this.setState({weight: val})}/>
                                 </Item>
                             </Body>
                         </CardItem>
@@ -269,7 +251,7 @@ class Home extends Component {
                                             width: undefined
                                         }}
                                         selectedValue={courier}
-                                        onValueChange={this._onCourierChange}>
+                                        onValueChange={val => this.setState({courier: val})}>
                                         <Picker.Item label="Pilih Kurir" value="" />
                                         <Picker.Item label="JNE" value="jne" />
                                         <Picker.Item label="TIKI" value="tiki" />

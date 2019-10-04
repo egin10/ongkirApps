@@ -45,7 +45,7 @@ class Detail extends Component {
 
     render() {
         let {results} = this.state;
-        let {courier} = this.props.data;
+        let {courier, weight} = this.props.data;
         let constItem = <View></View>;
         
         if(results){
@@ -60,12 +60,10 @@ class Detail extends Component {
                         <Body>
                             <Text>{item.service}</Text>
                             <Text note>{item.description}</Text>
-                            <Text note>{item.cost[0].etd} {courier != 'pos' ? ' HARI' : null}</Text>
+                            <Text note>{weight/1000}Kg</Text>
+                            <Text note>{item.cost[0].etd} {courier != 'pos' ? 'HARI' : null}</Text>
                         </Body>
                         <Right>
-                            {/* <Text note>
-                                Rp.{item.cost[0].value}
-                            </Text> */}
                             <NumberFormat 
                                 value={item.cost[0].value} 
                                 displayType={'text'} 
